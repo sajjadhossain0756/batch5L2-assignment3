@@ -16,8 +16,21 @@ booksRoutes.post('/',async(req: Request,res: Response)=>{
      })
 })
 booksRoutes.get('/',async(req: Request,res: Response)=>{
-      
-    const books = await Books.find();
+    
+    const genre = req.query.genre;
+    const sortBy = req.query.sortBy;
+    const sort = req.query.sort;
+    const parseJson = JSON.parse(`{"${sortBy}": "${sort}"}`);
+    const limit = Number(req.query.limit);
+    console.log(Number(limit));
+    
+    let books = []
+    if(genre){
+         books = await Books.find({genre: genre}).sort(parseJson).limit(limit);
+    }else{
+         books = await Books.find()
+    }
+    
 
     res.status(201).json({
         success: true,
@@ -51,7 +64,7 @@ booksRoutes.put('/:bookId',async(req: Request,res: Response)=>{
 booksRoutes.delete('/:bookId',async(req: Request,res: Response)=>{
       
     const bookId = req.params.bookId;
-    const book = await Books.findByIdAndDelete(bookId);
+    await Books.findByIdAndDelete(bookId);
 
     res.status(201).json({
         success: true,
