@@ -10,7 +10,7 @@ borrowRoutes.post('/',async(req: Request,res: Response)=>{
      const requestQuantity = req.body.quantity;
 
      const book = await Books.findById(bookId);
-     console.log(book);
+     
      if(!book){
         throw new Error('Book Not Found')
      }
@@ -41,4 +41,23 @@ borrowRoutes.post('/',async(req: Request,res: Response)=>{
         message: 'Book borrowed successfully ',
         borrow
      })
+})
+borrowRoutes.get('/',async(req: Request,res: Response)=>{
+        
+        const data = await Borrow.aggregate([
+         //   stage-1
+         {$group:{_id: "$book", totalQuantity: {$sum: "$quantity"}}},
+         //   stage-2
+         {$lookup: {from: "books",localField: "_id",foreignField: "_id",as:"bookDetails"}},
+         //   stage-3
+         {$unwind: "$bookDetails"},
+         //   stage-4
+         {$project:{_id:0,book:{title: "$bookDetails.title",isbn: "$bookDetails.isbn"},totalQuantity: 1}}
+        ])
+
+        res.status(201).json({
+           success: true,
+           message: "Find all borrow books Successfully",
+           data
+        })
 })
