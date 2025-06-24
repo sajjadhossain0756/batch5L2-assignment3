@@ -18,8 +18,7 @@ const booksSchema = new Schema<Ibooks, booksStaticMethods>({
         min: [0,`Copies must be a positive number, got {VALUE}`] 
     },
     available: {
-        type: Boolean,
-        default: true
+        type: Boolean
     }
 }, {
     versionKey: false,
@@ -30,6 +29,16 @@ const booksSchema = new Schema<Ibooks, booksStaticMethods>({
 booksSchema.static("availableStatus", function(newCopies: number){
     const newAvailabilityStatus = newCopies > 0;
     return newAvailabilityStatus;
+})
+
+booksSchema.pre('save',function(){
+    if(this.copies >= 0){
+        this.available = false
+    }else{
+        this.available = true;
+    }
+    
+    console.log(this);
 })
 
 export const Books = model<Ibooks, booksStaticMethods>("Books", booksSchema);

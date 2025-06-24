@@ -60,12 +60,13 @@ booksRoutes.put('/:bookId', async (req: Request, res: Response) => {
     const updateBook = req.body;
     updateBook.available = true;
     
-    const book = await Books.findByIdAndUpdate(bookId, updateBook, { new: true });
+    // const book = await Books.findByIdAndUpdate(bookId, updateBook, { new: true });
+    const book2 = await Books.findOneAndUpdate({_id: bookId}, updateBook, {new: true});
 
     res.status(201).json({
         success: true,
         message: "Book updated successfully",
-        book
+        book2
     })
 })
 booksRoutes.delete('/:bookId', async (req: Request, res: Response) => {
