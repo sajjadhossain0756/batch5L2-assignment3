@@ -1,3 +1,4 @@
+import { Model } from "mongoose"
 
 export interface Ibooks {
     title: string,
@@ -7,4 +8,8 @@ export interface Ibooks {
     description: string,
     copies: number,
     available: boolean
+}
+
+export interface booksStaticMethods extends Model<Ibooks> {
+      availableStatus(newCopies: number): boolean
 }

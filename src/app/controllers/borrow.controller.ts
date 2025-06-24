@@ -19,7 +19,8 @@ borrowRoutes.post('/',async(req: Request,res: Response)=>{
      }
 
      const newCopies = book.copies - requestQuantity;
-     const newAvailabilityStatus = newCopies > 0;
+     const newAvailabilityStatus = Books.availableStatus(newCopies);
+     console.log(newAvailabilityStatus);
 
      const updateBook = await Books.findByIdAndUpdate(
         bookId,

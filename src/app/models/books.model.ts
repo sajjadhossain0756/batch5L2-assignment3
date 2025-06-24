@@ -1,8 +1,8 @@
 import { model, Schema } from "mongoose";
-import { Ibooks } from "../interfaces/books.interface";
+import { booksStaticMethods, Ibooks } from "../interfaces/books.interface";
 
 
-const booksSchema = new Schema<Ibooks>({
+const booksSchema = new Schema<Ibooks, booksStaticMethods>({
     title: { type: String, required: true, trim: true },
     author: { type: String, required: true },
     genre: {
@@ -27,4 +27,9 @@ const booksSchema = new Schema<Ibooks>({
 }
 );
 
-export const Books = model("Books", booksSchema);
+booksSchema.static("availableStatus", function(newCopies: number){
+    const newAvailabilityStatus = newCopies > 0;
+    return newAvailabilityStatus;
+})
+
+export const Books = model<Ibooks, booksStaticMethods>("Books", booksSchema);

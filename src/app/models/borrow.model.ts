@@ -7,7 +7,11 @@ const borrowSchema = new Schema<Iborrow>({
         ref: "Books",
         required: true
     },
-    quantity: {type: Number,required: true},
+    quantity: {
+        type: Number,
+        required: true,
+        min: [0,`Quantity must be a positive number, got {VALUE}`]
+    },
     dueDate: {type: String,required:true}
 }, {
     versionKey: false,
