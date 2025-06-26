@@ -37,8 +37,6 @@ booksSchema.pre('save',function(){
     }else{
         this.available = true;
     }
-    
-    console.log(this);
 })
 
 export const Books = model<Ibooks, booksStaticMethods>("Books", booksSchema);

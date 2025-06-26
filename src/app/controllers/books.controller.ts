@@ -15,8 +15,42 @@ booksRoutes.post('/', async (req: Request, res: Response) => {
             message: "Books created Successfully",
             books
         })
-    } catch (error) {
-        console.log(error)
+    } catch (error: unknown) {
+        if (error.name === 'ValidationError') {
+            console.log("Mongoose Validation Error Caught:", error);
+
+            return res.status(400).json({
+                message: "Validation Failed",
+                success: false,
+                error: {
+                    name: error.name,
+                    error: error.errors
+                }
+            })
+        }else if(error.code === 11000){
+                const field = Object.keys(error.keyValue)[0];
+                const value = error.keyValue[field];
+                return res.status(409).json({
+                    message: `Duplicate Entry: A book with this ${field} ${value} already exist`,
+                    success: false,
+                    error:{
+                        name: "MongoError",
+                        code: error.code,
+                        keyValue: error.keyValue
+                    }
+                })
+        }else{
+            console.error('Unhandled Server Error:', error);
+            return res.status(500).json({
+                message: "An Unexpected Server Error Occured.",
+                success: false,
+                error:{
+                    name: error.name || "Internal Server Error",
+                    message: error.message || "Something Went On the server"
+                }
+            })
+        }
+        // console.log(error)
     }
 })
 booksRoutes.get('/', async (req: Request, res: Response) => {
@@ -59,9 +93,9 @@ booksRoutes.put('/:bookId', async (req: Request, res: Response) => {
     const bookId = req.params.bookId;
     const updateBook = req.body;
     updateBook.available = true;
-    
+
     // const book = await Books.findByIdAndUpdate(bookId, updateBook, { new: true });
-    const book2 = await Books.findOneAndUpdate({_id: bookId}, updateBook, {new: true});
+    const book2 = await Books.findOneAndUpdate({ _id: bookId }, updateBook, { new: true });
 
     res.status(201).json({
         success: true,
