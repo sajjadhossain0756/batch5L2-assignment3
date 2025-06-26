@@ -18,12 +18,26 @@ In mongodb atlas database. also we can update,delete,get data from database.
 ###  Mongoose: An elegent mongoDB object modeling for node.js, providing schema-based
 ###  Solutions to model your applications data.
 
+## Instructions on setting up the project locally::
 
-## List of API Routes:
+### Create a folder in your pc.
+### then clone the project with this command: git clone repo name
+### => git clone https://github.com/sajjadhossain0756/batch5L2-assignment3.git;
+### then enter this command in your vscode command line: cd projectname;
+### then run this command: npm install. for install all dependencies which was use this project;
+### give an port no for server running.
+### for mongodb database connect give your mongodb URI with userId,password and database name.
+### then run this command: npm run dev. for typescript file compile to javascript file and server watching
+### all changing file immedeately.
+
+
+## My Project Features and List of API Routes:
 
 #  Books Related API:
 ### Post: /api/books/, this route we can create a new books data to database;
 ### Get: /api/books/, this route we find all books data from database;
+### Get: /api/books?genre=name&sortBy=fieldname&sort=sortType, we can get data from
+### database by filtering genre field. we can also sort data by any field and we can declare sort type;
 ### Get: /api/books/:bookId, this route we find a books by this bookId;
 ### Put: /api/books/:bookId,  this route we can update books data by bookId;
 ### Delete: /api/books/:bookId, this route we can delete a book by bookId;
