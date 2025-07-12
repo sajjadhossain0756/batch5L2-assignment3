@@ -6,6 +6,7 @@ const booksSchema = new Schema<Ibooks, booksStaticMethods>({
     title: { type: String, required: true, trim: true },
     author: { type: String, required: true },
     genre: {
+        trim: true,
         type: String,
         enum: ["FICTION", "NON_FICTION", "SCIENCE", "HISTORY", "BIOGRAPHY", "FANTASY"],
         required: true
@@ -33,9 +34,9 @@ booksSchema.static("availableStatus", function(newCopies: number){
 
 booksSchema.pre('save',function(){
     if(this.copies >= 0){
-        this.available = false
+        this.available = true
     }else{
-        this.available = true;
+        this.available = false;
     }
 })
 

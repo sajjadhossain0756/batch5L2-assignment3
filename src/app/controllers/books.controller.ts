@@ -7,7 +7,9 @@ export const booksRoutes = express.Router();
 booksRoutes.post('/', async (req: Request, res: Response) => {
     try {
         const body = req.body;
-
+        body.available = true,
+        body.copies = Number(body.copies),
+        console.log(body)
         const books = await Books.create(body);
 
         res.status(201).json({
@@ -88,16 +90,20 @@ booksRoutes.get('/:bookId', async (req: Request, res: Response) => {
         book
     })
 })
-booksRoutes.put('/:bookId', async (req: Request, res: Response) => {
+booksRoutes.patch('/:bookId', async (req: Request, res: Response) => {
 
     const bookId = req.params.bookId;
     const updateBook = req.body;
-    updateBook.available = true;
-
+    if(updateBook.copies === 0){
+        updateBook.available = false;
+    }else{
+        updateBook.available = true
+    }
+    
     // const book = await Books.findByIdAndUpdate(bookId, updateBook, { new: true });
     const book2 = await Books.findOneAndUpdate({ _id: bookId }, updateBook, { new: true });
 
-    res.status(201).json({
+    res.status(200).json({
         success: true,
         message: "Book updated successfully",
         book2
